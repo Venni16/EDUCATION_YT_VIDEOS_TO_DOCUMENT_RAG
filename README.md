@@ -73,6 +73,47 @@ graph TD
 
 ---
 
+## 🧠 Deep Dive: AI Synthesis Microservice
+
+The AI Service is a high-performance **FastAPI** application designed to handle the core RAG (Retrieval-Augmented Generation) pipeline. It orchestrates a multi-step **ReAct-style Agentic Workflow** to ensure high-fidelity document synthesis.
+
+### AI Service Internal Flow
+
+```mermaid
+graph LR
+    subgraph "Ingestion Engine"
+        I1[Transcript Extractor] --> I2[Text Processor]
+        I2 --> I3[Semantic Chunker]
+    end
+
+    subgraph "Vector Intelligence"
+        I3 --> V1[Sentence Transformer]
+        V1 --> V2[(FAISS Vector Index)]
+    end
+
+    subgraph "Agentic Orchestrator"
+        A1[ReAct Agent] -- "Identify Topics" --> V2
+        A1 -- "Retrieve Context" --> V2
+        A1 -- "Synthesize Section" --> L1[HF LLM API]
+    end
+
+    subgraph "Exporter"
+        A1 --> E1[Markdown Assembler]
+        E1 --> E2[PDF Generator]
+    end
+```
+
+### The Agentic RAG Workflow
+Vortex RAG does not simply "summarize" text. It follows a 5-step cognitive pipeline:
+
+1.  **Topological Analysis**: The agent analyzes a 3,000-character overview of the transcript to identify the top **5 strategic topics**.
+2.  **Semantic Retrieval**: For each identified topic, the agent performs a similarity search against the **FAISS** index to retrieve relevant context chunks.
+3.  **Contextual Synthesis**: The agent calls the **Qwen2.5-72B** model with the retrieved context and a specific persona prompt to write a detailed, professional section.
+4.  **Executive Distillation**: A separate pass is made to generate a high-level **Abstract** and a list of **6 Actionable Takeaways**.
+5.  **Professional Post-Processing**: The components are assembled into valid Markdown and converted into a **PDF** via the `xhtml2pdf` engine.
+
+---
+
 ## 🤖 AI-Assisted Development
 
 This project was developed using modern **AI-assisted development workflows** to significantly accelerate prototyping, UI design, and complex RAG pipeline experimentation.

@@ -64,7 +64,9 @@ const Viewer = () => {
         <div className="flex gap-4">
            {result.pdf_url && (
              <a 
-               href={result.pdf_url} 
+               href={`http://localhost:8000${result.pdf_url}`} 
+               target="_blank"
+               rel="noopener noreferrer"
                download
                className="btn-primary inline-flex items-center gap-2 px-5 py-2.5 text-sm"
              >
